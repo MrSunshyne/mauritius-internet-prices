@@ -30,6 +30,11 @@
             href="https://docs.google.com/spreadsheets/d/1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0/edit#gid=0"
             class="inline-block bg-teal-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
           >Source</a>
+          <a
+            target="_blank"
+            href="https://github.com/MrSunshyne/mauritius-internet-prices"
+            class="inline-block bg-teal-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
+          >Contribute?</a>
         </div>
       </div>
       <div class="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
