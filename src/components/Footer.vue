@@ -10,7 +10,6 @@ const currentPath = route.path
 <template>
   <div class="flex justify-center">
     <nav class="text-xl mt-6 flex mx-auto">
-      {{ currentPath }}
       <router-link
         v-for="item in menu"
         :key="item.name"

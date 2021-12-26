@@ -11,3 +11,5 @@ useQueryProvider()
     </transition>
   </router-view>
 </template>
+
+<style lang="scss" src="./sass/styles.scss"></style>
