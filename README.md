@@ -1,4 +1,4 @@
-# Mobile Internet - Mauritius
+# Mauritius Internet Prices
 
 An open source project to visualize bandwidth and pricing of various prepaid mobile internet packages available in Mauritius.
 
