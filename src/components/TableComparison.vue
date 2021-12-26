@@ -63,4 +63,6 @@ const searchOptions = {
 const paginationOptions = {
   enabled: true,
   perPage: 50,
-  positio               </script>
+  position: 'bottom',
+} 
+</script>
