@@ -46,7 +46,7 @@ const searchOptions = {
 
 const paginationOptions = {
   enabled: true,
-  perPage: 10,
+  perPage: 50,
   position: 'bottom',
-}
+} 
 </script>
