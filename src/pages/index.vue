@@ -13,7 +13,9 @@ const { headers, items, loading } = useSheet(API_KEY, SHEET_ID);
   <pre v-if="loading && !items">loading...</pre>
   <div v-else>
     <!-- {{ headers }} -->
-    <TableComparison :headers="headers" :rows="items"></TableComparison>
+    <div class="flex flex-col gap-8 py-8">
+      <TableComparison :headers="headers" :rows="items"></TableComparison>
+    </div>
   </div>
 </template>   
 

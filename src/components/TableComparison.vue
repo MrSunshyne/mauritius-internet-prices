@@ -1,9 +1,9 @@
 <template>
   <div v-if="rows" class="w-full">
-    <!-- <div class="prose">
-      <pre>{{ columns }}</pre>
-      <pre>{{ rows }}</pre>
-    </div>-->
+    <div class="prose">
+      <!-- <pre>{{ columns }}</pre> -->
+      <!-- <pre>{{ rows }}</pre> -->
+    </div>
     <vue-good-table
       v-if="rows && Object.keys(rows).length > 0"
       theme="tailwindcss"
@@ -36,13 +36,23 @@ const props = defineProps({
   },
 })
 
+let FieldsShouldBeNumberType = ["Package Name",
+  "Duration(days)",
+  "Volume (GB)",
+  "Volume per day",
+  "Cost(Rs)",
+  "Cost(Rs) per day",
+  "Cost per GB"];
+
 // Format Columns
 let columns = computed(() => {
-  // if (!headers) return []
+
   return props.headers.map(header => ({
     label: header,
     field: header,
+    type: FieldsShouldBeNumberType.includes(header as string) ? 'number' : 'text',
   }))
+
 })
 
 const searchOptions = {

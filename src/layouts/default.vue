@@ -1,5 +1,5 @@
 <template>
-  <main class="text-gray-700 dark:text-gray-200">
+  <main class="text-gray-700 dark:text-gray-200 pb-16">
     <SiteHeader />
     <div class="container mx-auto">
       <router-view />
