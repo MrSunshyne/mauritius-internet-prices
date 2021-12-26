@@ -16,20 +16,20 @@
             >{{ link.name }}</a>
           </div>
         </div>
-        <div class="ml-10 space-x-4">
-          <a
-            href="https://docs.google.com/spreadsheets/d/1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0/edit#gid=0"
-            class="inline-block bg-teal-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
-          >Source</a>
-
+        <div class="ml-10 space-x-4 flex items-center">
           <button
-            class="icon-btn mx-2 !outline-none"
+            class="icon-btn mx-2 !outline-none text-white"
             title="button.toggle_dark"
             @click="toggleDark()"
           >
             <carbon-moon v-if="isDark" />
             <carbon-sun v-else />
           </button>
+          <a
+            target="_blank"
+            href="https://docs.google.com/spreadsheets/d/1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0/edit#gid=0"
+            class="inline-block bg-teal-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
+          >Source</a>
         </div>
       </div>
       <div class="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
