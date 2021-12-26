@@ -36,7 +36,7 @@ const props = defineProps({
   },
 })
 
-let FieldsShouldBeNumberType = ["Package Name",
+let FieldsShouldBeNumberType = [
   "Duration(days)",
   "Volume (GB)",
   "Volume per day",
@@ -63,6 +63,4 @@ const searchOptions = {
 const paginationOptions = {
   enabled: true,
   perPage: 50,
-  position: 'bottom',
-} 
-</script>
+  positio               </script>
