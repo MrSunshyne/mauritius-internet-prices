@@ -10,6 +10,7 @@ declare module 'vue' {
     Footer: typeof import('./components/Footer.vue')['default']
     ReactiveCovidChart: typeof import('./components/ReactiveCovidChart.vue')['default']
     README: typeof import('./components/vue3-good-table/README.md')['default']
+    SiteHeader: typeof import('./components/SiteHeader.vue')['default']
     Table: typeof import('./components/vue3-good-table/Table.vue')['default']
     TableComparison: typeof import('./components/TableComparison.vue')['default']
     VgtFilterRow: typeof import('./components/vue3-good-table/VgtFilterRow.vue')['default']

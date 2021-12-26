@@ -12,7 +12,13 @@
       :pagination-options="paginationOptions"
       :search-options="searchOptions"
       styleClass="vgt-table striped w-full"
-    ></vue-good-table>
+    >
+      <template v-slot:table-row="props">
+        <span v-if="props.column.field === 'Source'">
+          <a target="_blank" :href="props.row.Source">View</a>
+        </span>
+      </template>
+    </vue-good-table>
   </div>
 </template>
 
