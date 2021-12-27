@@ -21,21 +21,21 @@
 const faqs = [
   {
     id: 1,
-    question: "What's the best thing about Switzerland?",
+    question: "Why are you doing this ? Is this advertisment for a company ?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "No. I have been a heavy internet user for many years and I love remote work. Comparing prepaid mobile internet is something I care about, and I though it would be worth sharing some kind of interactive infographic using the publicly available information.",
   },
   {
     id: 2,
-    question: "What's the best thing about Switzerland?",
+    question: "Why Open Source this ?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Why not ?",
   },
   {
     id: 3,
-    question: "What's the best thing about Switzerland?",
+    question: "Where is the data from?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "The details regarding all packages are taken from publicly advertised prices from the websites of the service providers/telecommunication operators. Links to the source of the prices are also published.",
   },
   {
     id: 4,

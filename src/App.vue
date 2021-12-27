@@ -13,3 +13,20 @@ useQueryProvider()
 </template>
 
 <style lang="scss" src="./sass/styles.scss"></style>
+<style>
+html.dark .bg-white {
+  @apply bg-gray-600;
+}
+
+html.dark .bg-gray-50 {
+  @apply bg-gray-700;
+}
+
+html.dark .bg-gray-100 {
+  @apply bg-gray-800;
+}
+
+html.dark .bg-gray-200 {
+  @apply bg-gray-900;
+}
+</style>
