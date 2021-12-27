@@ -1,5 +1,5 @@
 <template>
-  <div v-if="rows" class="w-full">
+  <div v-if="rows" class="w-full bg-white">
     <div class="prose">
       <!-- <pre>{{ columns }}</pre> -->
       <!-- <pre>{{ rows }}</pre> -->
@@ -11,7 +11,7 @@
       :rows="rows"
       :pagination-options="paginationOptions"
       :search-options="searchOptions"
-      styleClass="vgt-table striped w-full"
+      styleClass="vgt-table striped w-full "
     >
       <template v-slot:table-row="props">
         <span v-if="props.column.field === 'Source'">
