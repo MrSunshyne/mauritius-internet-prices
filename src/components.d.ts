@@ -8,6 +8,8 @@ declare module 'vue' {
     CarbonSun: typeof import('~icons/carbon/sun')['default']
     CovidChart: typeof import('./components/CovidChart.vue')['default']
     Footer: typeof import('./components/Footer.vue')['default']
+    FrequentlyAskedQuestions: typeof import('./components/FrequentlyAskedQuestions.vue')['default']
+    Operators: typeof import('./components/Operators.vue')['default']
     ReactiveCovidChart: typeof import('./components/ReactiveCovidChart.vue')['default']
     README: typeof import('./components/vue3-good-table/README.md')['default']
     SiteHeader: typeof import('./components/SiteHeader.vue')['default']
