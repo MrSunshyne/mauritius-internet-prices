@@ -1,6 +1,6 @@
 <template>
   <main class="app text-gray-100 pb-16 bg-gray-900 relative">
-    <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute inset-0 z-0 overflow-hidden">
       <div
         class="absolute top-0 -left-4 w-[500px] h-[500px] bg-red-500 rounded-full mix-blend-exclusion filter blur-xl opacity-30 animate-blob"
       ></div>

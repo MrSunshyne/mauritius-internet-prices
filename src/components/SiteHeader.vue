@@ -1,6 +1,6 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-  <header class="bg-gray-800">
+  <header class="bg-gray-800 relative z-100 bg-opacity-70">
     <nav class="container mx-auto" aria-label="Top">
       <div
         class="w-full py-6 flex flex-wrap md:flex-nowrap items-center justify-center md:justify-between border-b border-gray-500 gap-4 lg:border-none"
@@ -35,7 +35,7 @@
             target="_blank"
             href="https://github.com/MrSunshyne/mauritius-internet-prices"
             class="inline-block bg-gray-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75"
-          >Contribute?</a>
+          >Work In Progress. Contribute?</a>
         </div>
       </div>
       <div class="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
