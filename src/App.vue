@@ -14,7 +14,7 @@ useQueryProvider()
 
 <style lang="scss" src="./sass/styles.scss"></style>
 <style>
-html.dark .bg-white {
+/* html.dark .bg-white {
   @apply bg-gray-600;
 }
 
@@ -28,5 +28,5 @@ html.dark .bg-gray-100 {
 
 html.dark .bg-gray-200 {
   @apply bg-gray-900;
-}
+} */
 </style>

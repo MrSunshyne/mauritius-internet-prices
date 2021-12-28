@@ -1,5 +1,5 @@
 <template>
-  <div v-if="rows" class="w-full bg-white">
+  <div v-if="rows" class="w-full">
     <div class="prose">
       <!-- <pre>{{ columns }}</pre> -->
       <!-- <pre>{{ rows }}</pre> -->

@@ -3,7 +3,7 @@
     <h2 class="text-xl font-medium">Operators</h2>
     <div class="flex gap-8">
       <div
-        class="text-2xl font-bold shadow-md px-8 py-4 rounded-lg bg-white hover:shadow-lg transition-all"
+        class="text-2xl font-bold shadow-md px-8 py-4 rounded-lg bg-gray-600 hover:shadow-lg transition-all"
         v-for="operator in operators"
       >{{ operator }}</div>
     </div>

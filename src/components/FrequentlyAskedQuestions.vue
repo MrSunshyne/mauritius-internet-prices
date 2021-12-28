@@ -1,14 +1,14 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-  <div class="bg-gray-50">
-    <div class="max-w-7xl mx-auto py-12 px-4 divide-y divide-gray-200 sm:px-6 lg:py-16 lg:px-8">
-      <h2 class="text-3xl font-extrabold text-gray-900">Frequently asked questions</h2>
+  <div class="bg-gray-800">
+    <div class="max-w-7xl mx-auto py-12 px-4 divide-y divide-gray-600 sm:px-6 lg:py-16 lg:px-8">
+      <h2 class="text-3xl font-extrabold text-gray-100">Frequently asked questions</h2>
       <div class="mt-8">
-        <dl class="divide-y divide-gray-200">
+        <dl class="divide-y divide-gray-700">
           <div v-for="faq in faqs" :key="faq.id" class="pt-6 pb-8 md:grid md:grid-cols-12 md:gap-8">
-            <dt class="text-base font-medium text-gray-900 md:col-span-5">{{ faq.question }}</dt>
+            <dt class="text-base font-medium text-gray-100 md:col-span-5">{{ faq.question }}</dt>
             <dd class="mt-2 md:mt-0 md:col-span-7">
-              <p class="text-base text-gray-500">{{ faq.answer }}</p>
+              <p class="text-base text-gray-400">{{ faq.answer }}</p>
             </dd>
           </div>
         </dl>
