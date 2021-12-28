@@ -5,8 +5,10 @@
 declare module 'vue' {
   export interface GlobalComponents {
     CarbonMoon: typeof import('~icons/carbon/moon')['default']
+    CarbonSad: typeof import('~icons/carbon/sad')['default']
     CarbonSun: typeof import('~icons/carbon/sun')['default']
     CovidChart: typeof import('./components/CovidChart.vue')['default']
+    Filters: typeof import('./components/Filters.vue')['default']
     Footer: typeof import('./components/Footer.vue')['default']
     FrequentlyAskedQuestions: typeof import('./components/FrequentlyAskedQuestions.vue')['default']
     Operators: typeof import('./components/Operators.vue')['default']

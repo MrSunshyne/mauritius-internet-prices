@@ -1,5 +1,5 @@
 <template>
-  <div v-if="rows" class="w-full">
+  <div v-if="rows && rows.length > 0" class="w-full">
     <div class="prose">
       <!-- <pre>{{ columns }}</pre> -->
       <!-- <pre>{{ rows }}</pre> -->
@@ -19,6 +19,14 @@
         </span>
       </template>
     </vue-good-table>
+  </div>
+  <div v-else>
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div class="text-center flex flex-col items-center justify-center text-3xl">
+      <carbon-moon />
+      <h3 class="mt-2 font-medium text-gray-100">Nothing matches</h3>
+      <p class="mt-1 text-gray-200">Try another filter?</p>
+    </div>
   </div>
 </template>
 
@@ -64,5 +72,5 @@ const paginationOptions = {
   enabled: true,
   perPage: 50,
   position: 'bottom',
-} 
+}
 </script>

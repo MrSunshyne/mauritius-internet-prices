@@ -1,21 +1,21 @@
-$thead-bg-color-1: var(--bg-primary-700);
-$thead-bg-color-2: var(--bg-primary-600);
-$thead-bg-color-3: var(--bg-primary-500);
+$thead-bg-color-1: var(--color-gray-700);
+$thead-bg-color-2: var(--color-gray-600);
+$thead-bg-color-3: var(--color-gray-800);
 
-$header-color: var(--text-primary-500);
-$text-color: var(--text-text-1);
-$link-color: var(--brand);
-$focus-color: var(--bg-primary-600);
-$text-color-td: var(--text-primary-500);
+$header-color: var(--color-gray-300);
+$text-color: var(--color-gray-200);
+$link-color: var(--color-red-500);
+$focus-color: var(--color-gray-600);
+$text-color-td: var(--color-gray-200);
 $text-shadow-color: lighten(#2c394f, 10%);
 
-$secondary-text-color: var(--text-text-1);
-$border-color: var(--bg-primary-600);
-$border-color-td: var(--bg-primary-600);
+$secondary-text-color: var(--color-gray-400);
+$border-color: var(--color-gray-700);
+$border-color-td: var(--color-gray-700);
 
-$input-border-color: transparent;
-$input-bg: var(--bg-primary-700);
+$input-border-color: red;
+$input-bg: var(--color-gray-700);
 
-$table-bg: var(--bg-primary-700);
-$highlight-color: var(--bg-primary-600);
-$white: var(--surface-3);
+$table-bg: var(--color-gray-700);
+$highlight-color: var(--color-gray-600);
+$white: var(--color-gray-800);

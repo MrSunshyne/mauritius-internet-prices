@@ -13,16 +13,13 @@ loading ref
 */
 
 import { ref, reactive, Ref } from "vue"
-
-interface I {
-  [key: string]: any
-}
+import { Row } from '@/types'
 
 export default (API_KEY: string = 'xxx', SHEET_ID: string = 'yyy', SHEET_NAME: string = 'Sheet1') => {
 
   const loading: Ref<boolean> = ref(true)
   let headers: string[] = reactive([])
-  let items = reactive([]) as I[]
+  let items = reactive([]) as Row[]
 
 
   function formatter(input: string[]) {

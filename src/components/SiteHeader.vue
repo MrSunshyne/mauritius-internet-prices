@@ -17,14 +17,14 @@
           </div>
         </div>
         <div class="ml-10 space-x-4 flex items-center">
-          <button
+          <!-- <button
             class="icon-btn mx-2 !outline-none text-white"
             title="button.toggle_dark"
             @click="toggleDark()"
           >
             <carbon-moon v-if="isDark" />
             <carbon-sun v-else />
-          </button>
+          </button>-->
           <a
             target="_blank"
             href="https://docs.google.com/spreadsheets/d/1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0/edit#gid=0"

@@ -2,12 +2,34 @@
 
 import useSheet from '@/logic/useGoogleSheet'
 import TableComparison from '@/components/TableComparison.vue';
-import Operators from '@/components/Operators.vue';
 import FrequentlyAskedQuestions from '@/components/FrequentlyAskedQuestions.vue';
 const API_KEY = 'AIzaSyClsialqDzA0V4_fuxURgwjTEaCxU788xs'
 const SHEET_ID = '1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0'
 const { headers, items, loading } = useSheet(API_KEY, SHEET_ID);
 
+const filters = reactive({
+  Operator: null,
+  Package: null
+})
+
+const filteredItems = computed(() => {
+  let results = [...items]
+  if (filters.Operator) {
+    results = results.filter(item => item.Operator === filters.Operator)
+  }
+  if (filters.Package) {
+    results = results.filter(item => item.Package === filters.Package)
+  }
+
+
+  return results
+
+  // if (filters.operator !== '') {
+  //   return items.filter(item => item.Operator === filters.operator)
+  // }
+
+  // return items
+})
 
 </script> 
 
@@ -16,14 +38,15 @@ const { headers, items, loading } = useSheet(API_KEY, SHEET_ID);
   <div v-else>
     <!-- {{ headers }} -->
     <div class="flex flex-col gap-8 py-8">
-      <Operators :items="items" />
-      <TableComparison :headers="headers" :rows="items"></TableComparison>
+      <Filters v-model:filters="filters" :items="items" />
+      <TableComparison :headers="headers" :rows="filteredItems" />
       <FrequentlyAskedQuestions />
     </div>
   </div>
 </template>   
 
 <route lang="yaml">
-meta:
+meta: 
   layout: default
 </route>
+ 

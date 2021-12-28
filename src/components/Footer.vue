@@ -17,10 +17,10 @@ const currentPath = route.path
         :class="[item.path === currentPath ? 'bg-gray-100 text-red-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']"
       >{{ item.name }}</router-link>
 
-      <button class="icon-btn mx-2 !outline-none" title="button.toggle_dark" @click="toggleDark()">
+      <!-- <button class="icon-btn mx-2 !outline-none" title="button.toggle_dark" @click="toggleDark()">
         <carbon-moon v-if="isDark" />
         <carbon-sun v-else />
-      </button>
+      </button>-->
     </nav>
   </div>
 </template>
