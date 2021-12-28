@@ -6,14 +6,14 @@
         class="w-full py-6 flex items-center justify-between border-b border-gray-500 lg:border-none"
       >
         <div class="flex items-center">
-          <a href="#" class="text-2xl text-white">Mauritius Internet Prices</a>
+          <router-link :to="{ name: 'index' }" class="text-2xl text-white">Mauritius Internet Prices</router-link>
           <div class="hidden ml-10 space-x-8 lg:block">
-            <a
+            <router-link
               v-for="link in navigation"
               :key="link.name"
-              :href="link.href"
+              :to="link.route"
               class="text-base font-medium text-white hover:text-gray-50"
-            >{{ link.name }}</a>
+            >{{ link.name }}</router-link>
           </div>
         </div>
         <div class="ml-10 space-x-4 flex items-center">
@@ -25,6 +25,7 @@
             <carbon-moon v-if="isDark" />
             <carbon-sun v-else />
           </button>-->
+
           <a
             target="_blank"
             href="https://docs.google.com/spreadsheets/d/1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0/edit#gid=0"
@@ -50,10 +51,10 @@
 </template>
 
 <script lang="ts" setup>
-import { isDark, toggleDark } from '@/logic'
+// import { isDark, toggleDark } from '@/logic'
 
 const navigation = [
-  // { name: 'Solutions', href: '#' },
+  { name: 'FAQ', route: { name: 'faq' } },
   // { name: 'Pricing', href: '#' },
   // { name: 'Docs', href: '#' },
   // { name: 'Company', href: '#' },

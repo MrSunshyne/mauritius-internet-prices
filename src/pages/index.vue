@@ -2,7 +2,7 @@
 
 import useSheet from '@/logic/useGoogleSheet'
 import TableComparison from '@/components/TableComparison.vue';
-import FrequentlyAskedQuestions from '@/components/FrequentlyAskedQuestions.vue';
+
 const API_KEY = 'AIzaSyClsialqDzA0V4_fuxURgwjTEaCxU788xs'
 const SHEET_ID = '1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0'
 const { headers, items, loading } = useSheet(API_KEY, SHEET_ID);
@@ -37,10 +37,12 @@ const filteredItems = computed(() => {
   <pre v-if="loading && !items">loading...</pre>
   <div v-else>
     <!-- {{ headers }} -->
-    <div class="flex flex-col gap-8 py-8">
-      <Filters v-model:filters="filters" :items="items" />
-      <TableComparison :headers="headers" :rows="filteredItems" />
-      <FrequentlyAskedQuestions />
+    <div class="grid md:grid-cols-2 gap-8 py-8 relative">
+      <Top :items="items" unit="Rs" :sortBy="'Cost per GB'" :count="5" />
+      <Top :items="items" unit="GB" :sortBy="'Volume (GB)'" :count="5" />
+      <Top :items="items" unit="Rs" :sortBy="'Cost(Rs) per day'" :count="5" />
+      <Filters class="col-span-2" v-model:filters="filters" :items="items" />
+      <TableComparison class="col-span-2" :headers="headers" :rows="filteredItems" />
     </div>
   </div>
 </template>   
@@ -49,4 +51,4 @@ const filteredItems = computed(() => {
 meta: 
   layout: default
 </route>
- 
+    

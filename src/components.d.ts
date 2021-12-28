@@ -17,6 +17,8 @@ declare module 'vue' {
     SiteHeader: typeof import('./components/SiteHeader.vue')['default']
     Table: typeof import('./components/vue3-good-table/Table.vue')['default']
     TableComparison: typeof import('./components/TableComparison.vue')['default']
+    Top: typeof import('./components/Top.vue')['default']
+    TopPerGB: typeof import('./components/TopPerGB.vue')['default']
     VgtFilterRow: typeof import('./components/vue3-good-table/VgtFilterRow.vue')['default']
     VgtGlobalSearch: typeof import('./components/vue3-good-table/VgtGlobalSearch.vue')['default']
     VgtHeaderRow: typeof import('./components/vue3-good-table/VgtHeaderRow.vue')['default']

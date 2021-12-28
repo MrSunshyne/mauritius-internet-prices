@@ -69,7 +69,7 @@ const searchOptions = {
 }
 
 const paginationOptions = {
-  enabled: true,
+  enabled: false,
   perPage: 50,
   position: 'bottom',
 }

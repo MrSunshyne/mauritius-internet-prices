@@ -29,6 +29,25 @@ module.exports = {
       maxWidth: {
         '8xl': '100rem',
       },
+      animation: {
+        blob: "blob 7s infinite",
+      },
+      keyframes: {
+        blob: {
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+          "33%": {
+            transform: "translate(30px, -50px) scale(1.1)",
+          },
+          "66%": {
+            transform: "translate(-20px, 20px) scale(0.9)",
+          },
+          "100%": {
+            transform: "tranlate(0px, 0px) scale(1)",
+          },
+        },
+      },
     },
   },
   plugins: [
@@ -37,7 +56,7 @@ module.exports = {
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/typography'),
     require('./src/libs/vheme/plugin'),
-    function({ addBase, theme }) {
+    function ({ addBase, theme }) {
       function extractColorVars(colorObj, colorGroup = '') {
         return Object.keys(colorObj).reduce((vars, colorKey) => {
           const value = colorObj[colorKey]
