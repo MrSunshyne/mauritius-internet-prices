@@ -3,7 +3,7 @@
   <header class="bg-gray-800">
     <nav class="container mx-auto" aria-label="Top">
       <div
-        class="w-full py-6 flex items-center justify-between border-b border-gray-500 lg:border-none"
+        class="w-full py-6 flex flex-wrap md:flex-nowrap items-center justify-center md:justify-between border-b border-gray-500 gap-4 lg:border-none"
       >
         <div class="flex items-center">
           <router-link :to="{ name: 'index' }" class="text-2xl text-white">Mauritius Internet Prices</router-link>
@@ -16,7 +16,7 @@
             >{{ link.name }}</router-link>
           </div>
         </div>
-        <div class="ml-10 space-x-4 flex items-center">
+        <div class="space-x-4 flex items-center">
           <!-- <button
             class="icon-btn mx-2 !outline-none text-white"
             title="button.toggle_dark"

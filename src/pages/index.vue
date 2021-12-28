@@ -35,20 +35,21 @@ const filteredItems = computed(() => {
 
 <template>
   <pre v-if="loading && !items">loading...</pre>
-  <div v-else>
+  <template v-else>
     <!-- {{ headers }} -->
-    <div class="grid md:grid-cols-2 gap-8 py-8 relative">
+    <div class="md:grid grid-cols-2 gap-8 px-8 xl:px-0 py-8 w-full">
       <Top :items="items" unit="Rs" :sortBy="'Cost per GB'" :count="5" />
       <Top :items="items" unit="GB" :sortBy="'Volume (GB)'" :count="5" />
       <Top :items="items" unit="Rs" :sortBy="'Cost(Rs) per day'" :count="5" />
+
       <Filters class="col-span-2" v-model:filters="filters" :items="items" />
       <TableComparison class="col-span-2" :headers="headers" :rows="filteredItems" />
     </div>
-  </div>
+  </template>
 </template>   
 
 <route lang="yaml">
 meta: 
   layout: default
 </route>
-    
+     

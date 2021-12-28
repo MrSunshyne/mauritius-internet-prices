@@ -1,5 +1,5 @@
 <template>
-  <div v-if="rows && rows.length > 0" class="w-full">
+  <div v-if="rows && rows.length > 0" class="max-w-full overflow-hidden">
     <div class="prose">
       <!-- <pre>{{ columns }}</pre> -->
       <!-- <pre>{{ rows }}</pre> -->

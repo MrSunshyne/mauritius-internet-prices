@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="relative space-y-8 bg-gray-900 backdrop-blur-lg bg-opacity-50 rounded-lg shadow-lg p-8"
-  >
+  <div class="w-full space-y-8 bg-gray-900 backdrop-blur-lg bg-opacity-50 rounded-lg shadow-lg p-8">
     <div class="text-2xl font-bold">Top {{ sortBy }}</div>
     <div class="text-lg flex flex-col gap-4">
       <div v-for="row in sortedData" class="grid grid-cols-3 bg-gray-500 bg-opacity-10 rounded-md">

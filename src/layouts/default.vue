@@ -1,8 +1,6 @@
 <template>
-  <main class="app text-gray-100 pb-16 bg-gray-900">
-    <SiteHeader />
-
-    <div class="container mx-auto relative">
+  <main class="app text-gray-100 pb-16 bg-gray-900 relative">
+    <div class="absolute inset-0 overflow-hidden">
       <div
         class="absolute top-0 -left-4 w-[500px] h-[500px] bg-red-500 rounded-full mix-blend-exclusion filter blur-xl opacity-30 animate-blob"
       ></div>
@@ -15,7 +13,10 @@
       <div
         class="absolute top-[300px] left-20 w-[500px] h-[500px] bg-yellow-300 rounded-full mix-blend-screen filter blur-xl opacity-30 animate-blob animation-delay-4000"
       ></div>
+    </div>
+    <SiteHeader />
 
+    <div class="container mx-auto relative">
       <router-view />
     </div>
     <Footer />
