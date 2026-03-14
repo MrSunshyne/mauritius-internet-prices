@@ -42,63 +42,66 @@ useSeoMeta({
 
 <template>
   <main class="main">
-    <button class="filter-toggle" @click="showFilters = !showFilters">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M1 3h14M4 8h8M6 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-      </svg>
-      {{ showFilters ? 'Hide' : 'Show' }} Filters
-    </button>
+    <div class="header-section">
+      <h1 class="page-title">Compare All Plans</h1>
+      <button class="filter-toggle" @click="showFilters = !showFilters">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 6h16M7 12h10M10 18h4" stroke-linecap="round" />
+        </svg>
+        {{ showFilters ? 'Hide' : 'Show' }} Filters
+      </button>
+    </div>
 
     <div class="layout" :class="{ 'filters-hidden': !showFilters }">
       <aside v-show="showFilters" class="sidebar">
         <div class="filter-section">
           <h3>Operators</h3>
-          <label
-            v-for="op in operators"
-            :key="op.slug"
-            class="operator-checkbox"
-          >
-            <input
-              type="checkbox"
-              :checked="selectedOperators.includes(op.slug)"
-              @change="toggleOperator(op.slug)"
+          <div class="operator-list">
+            <label
+              v-for="op in operators"
+              :key="op.slug"
+              class="operator-checkbox"
             >
-            <span class="operator-dot" :style="{ background: op.color }" />
-            <span>{{ op.name }}</span>
-          </label>
-        </div>
-
-        <div class="filter-section">
-          <h3>Duration</h3>
-          <div class="duration-buttons">
-            <button :class="{ active: durationFilter === 'all' }" @click="durationFilter = 'all'">All</button>
-            <button :class="{ active: durationFilter === 'daily' }" @click="durationFilter = 'daily'">Daily</button>
-            <button :class="{ active: durationFilter === 'weekly' }" @click="durationFilter = 'weekly'">Weekly</button>
-            <button :class="{ active: durationFilter === 'monthly' }" @click="durationFilter = 'monthly'">Monthly</button>
-            <button :class="{ active: durationFilter === 'long' }" @click="durationFilter = 'long'">60+ days</button>
+              <input
+                type="checkbox"
+                :checked="selectedOperators.includes(op.slug)"
+                @change="toggleOperator(op.slug)"
+              >
+              <span class="custom-checkbox" :style="{ '--c': op.color }"></span>
+              <span>{{ op.name }}</span>
+            </label>
           </div>
         </div>
 
         <div class="filter-section">
-          <h3>Max Price</h3>
+          <h3>Duration</h3>
+          <div class="duration-grid">
+            <button v-for="d in ['all', 'daily', 'weekly', 'monthly', 'long']" :key="d" :class="{ active: durationFilter === d }" @click="durationFilter = (d as any)">
+              {{ d.charAt(0).toUpperCase() + d.slice(1) }}
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h3>Max Price: <span class="range-value">Rs {{ maxPrice.toLocaleString() }}</span></h3>
           <input
             v-model.number="maxPrice"
             type="range"
             :min="0"
             :max="maxPriceLimit"
             :step="5"
+            class="price-range"
           >
-          <span class="range-value">Rs {{ maxPrice.toLocaleString() }}</span>
         </div>
 
         <div class="filter-section">
-          <label class="operator-checkbox">
-            <input v-model="hideUnlimited" type="checkbox">
-            <span>Hide unlimited plans</span>
+          <label class="toggle-row">
+            <span>Hide unlimited</span>
+            <input v-model="hideUnlimited" type="checkbox" class="ios-toggle">
           </label>
-          <label class="operator-checkbox">
-            <input v-model="showNotes" type="checkbox">
-            <span>Show notes column</span>
+          <label class="toggle-row">
+            <span>Show notes</span>
+            <input v-model="showNotes" type="checkbox" class="ios-toggle">
           </label>
         </div>
 
@@ -109,84 +112,59 @@ useSeoMeta({
 
       <section class="content">
         <div class="results-bar">
-          <span class="results-count">{{ filteredPlans.length }} plans</span>
-          <div class="sort-buttons">
-            <span class="sort-label">Sort:</span>
-            <button :class="{ active: sortField === 'price' }" @click="toggleSort('price')">
-              Price{{ sortIcon('price') }}
-            </button>
-            <button :class="{ active: sortField === 'volume' }" @click="toggleSort('volume')">
-              Volume{{ sortIcon('volume') }}
-            </button>
-            <button :class="{ active: sortField === 'costPerGb' }" @click="toggleSort('costPerGb')">
-              Rs/GB{{ sortIcon('costPerGb') }}
-            </button>
-            <button :class="{ active: sortField === 'costPerDay' }" @click="toggleSort('costPerDay')">
-              Rs/day{{ sortIcon('costPerDay') }}
-            </button>
-            <button :class="{ active: sortField === 'duration' }" @click="toggleSort('duration')">
-              Duration{{ sortIcon('duration') }}
+          <span class="results-count">{{ filteredPlans.length }} plans found</span>
+          <div class="sort-chips">
+            <span class="sort-label">Sort by:</span>
+            <button v-for="s in ['price', 'volume', 'costPerGb', 'duration']" :key="s" :class="{ active: sortField === s }" @click="toggleSort(s as any)">
+              {{ s.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()) }}{{ sortIcon(s as any) }}
             </button>
           </div>
         </div>
 
-        <div class="table-wrapper">
+        <div class="table-container">
           <table class="plans-table">
             <thead>
               <tr>
                 <th>Operator</th>
-                <th>Plan</th>
-                <th class="num sortable" @click="toggleSort('duration')">
-                  Duration{{ sortIcon('duration') }}
-                </th>
-                <th class="num sortable" @click="toggleSort('volume')">
-                  Volume{{ sortIcon('volume') }}
-                </th>
-                <th class="num">Vol/day</th>
-                <th class="num sortable" @click="toggleSort('price')">
-                  Price{{ sortIcon('price') }}
-                </th>
-                <th class="num sortable" @click="toggleSort('costPerDay')">
-                  Rs/day{{ sortIcon('costPerDay') }}
-                </th>
-                <th class="num sortable" @click="toggleSort('costPerGb')">
-                  Rs/GB{{ sortIcon('costPerGb') }}
-                </th>
-                <th v-if="showNotes">Notes</th>
+                <th>Plan Name</th>
+                <th class="num">Duration</th>
+                <th class="num">Volume</th>
+                <th class="num">Daily</th>
+                <th class="num">Price</th>
+                <th class="num">Rs/GB</th>
               </tr>
             </thead>
             <tbody>
-              <template v-for="plan in filteredPlans" :key="plan.id">
-                <tr>
-                  <td>
-                    <span class="operator-badge" :style="{ '--c': operatorColor(plan.operatorSlug) }">
-                      {{ plan.operator }}
-                    </span>
-                  </td>
-                  <td class="plan-name">{{ plan.name }}</td>
-                  <td class="num">{{ formatDuration(plan.durationDays) }}</td>
-                  <td class="num">
-                    <span v-if="plan.volumeGb === null" class="unlimited-tag">Unlimited</span>
-                    <template v-else>{{ formatVolume(plan) }}</template>
-                  </td>
-                  <td class="num">
-                    <span v-if="plan.dailyCap" class="daily-cap-tag">{{ plan.dailyCap }} GB/day</span>
-                    <template v-else>{{ formatVolumePerDay(plan) }}</template>
-                  </td>
-                  <td class="num price-cell">
-                    <strong>{{ formatPrice(plan.priceMur) }}</strong>
-                  </td>
-                  <td class="num">{{ formatCostPerDay(plan) }}</td>
-                  <td class="num">{{ formatCostPerGb(plan) }}</td>
-                  <td v-if="showNotes" class="notes-cell">{{ plan.notes }}</td>
-                </tr>
-              </template>
+              <tr v-for="plan in filteredPlans" :key="plan.id">
+                <td>
+                  <span class="op-chip" :style="{ '--c': operatorColor(plan.operatorSlug) }">
+                    {{ plan.operator }}
+                  </span>
+                </td>
+                <td class="plan-cell">
+                  <div class="plan-name">{{ plan.name }}</div>
+                  <div v-if="showNotes && plan.notes" class="plan-notes">{{ plan.notes }}</div>
+                </td>
+                <td class="num">{{ formatDuration(plan.durationDays) }}</td>
+                <td class="num font-mono">
+                  <span v-if="plan.volumeGb === null" class="badge-unlimited">Unlimited</span>
+                  <template v-else>{{ formatVolume(plan) }}</template>
+                </td>
+                <td class="num font-mono">
+                  <span v-if="plan.dailyCap" class="badge-cap">{{ plan.dailyCap }} GB</span>
+                  <template v-else>{{ formatVolumePerDay(plan) }}</template>
+                </td>
+                <td class="num price-val">{{ formatPrice(plan.priceMur) }}</td>
+                <td class="num font-mono">{{ formatCostPerGb(plan) }}</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div v-if="filteredPlans.length === 0" class="empty-state">
-          No plans match your filters. Try adjusting your criteria.
+          <div class="empty-icon">!</div>
+          <p>No plans match your criteria.</p>
+          <button @click="resetFilters">Clear all filters</button>
         </div>
       </section>
     </div>
@@ -197,28 +175,41 @@ useSeoMeta({
 .main {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 16px 24px 48px;
+  padding: 48px 24px;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .filter-toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  font-size: 13px;
-  font-weight: 500;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   background: var(--surface);
   cursor: pointer;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 24px;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
   align-items: start;
 }
 
@@ -227,276 +218,268 @@ useSeoMeta({
 }
 
 .sidebar {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--surface-raised);
   border-radius: var(--radius-lg);
-  padding: 16px;
+  padding: 24px;
   position: sticky;
-  top: 72px;
-}
-
-.filter-section {
-  margin-bottom: 20px;
+  top: 88px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .filter-section h3 {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.operator-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .operator-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 4px 0;
 }
 
 .operator-checkbox input {
-  accent-color: var(--text);
+  display: none;
 }
 
-.operator-dot {
-  width: 8px;
+.custom-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.operator-checkbox input:checked + .custom-checkbox {
+  background: var(--c);
+  border-color: var(--c);
+}
+
+.operator-checkbox input:checked + .custom-checkbox::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
   height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
-.duration-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+.duration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 
-.duration-buttons button {
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 500;
+.duration-grid button {
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   background: var(--surface);
   cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
-.duration-buttons button.active {
-  background: var(--active-btn-bg);
-  color: var(--active-btn-text);
-  border-color: var(--active-btn-bg);
+.duration-grid button.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
 }
 
-.filter-section input[type="range"] {
+.price-range {
   width: 100%;
   accent-color: var(--text);
+  height: 6px;
+  border-radius: 100px;
+  cursor: pointer;
 }
 
-.range-value {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 12px;
 }
 
 .reset-btn {
-  width: 100%;
-  padding: 8px;
-  font-size: 13px;
-  font-weight: 500;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-md);
   background: var(--surface);
   cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
 .reset-btn:hover {
-  background: var(--bg);
-}
-
-.content {
-  min-width: 0;
+  background: color-mix(in srgb, var(--border) 50%, transparent);
 }
 
 .results-bar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .results-count {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
 }
 
-.sort-buttons {
+.sort-chips {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .sort-label {
   font-size: 12px;
   color: var(--text-muted);
-  margin-right: 4px;
+  font-weight: 600;
 }
 
-.sort-buttons button {
-  padding: 4px 10px;
+.sort-chips button {
+  padding: 6px 14px;
   font-size: 12px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  font-weight: 700;
   background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
   cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.15s;
-  white-space: nowrap;
+  transition: all 0.2s;
 }
 
-.sort-buttons button.active {
-  background: var(--active-btn-bg);
-  color: var(--active-btn-text);
-  border-color: var(--active-btn-bg);
+.sort-chips button.active {
+  border-color: var(--text);
+  background: var(--accent-soft);
 }
 
-.table-wrapper {
-  overflow-x: auto;
+.table-container {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  overflow: hidden;
   background: var(--surface);
 }
 
 .plans-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
-}
-
-.plans-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.plans-table th {
-  background: var(--table-header);
-  padding: 10px 12px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-  user-select: none;
-}
-
-.plans-table th.sortable {
-  cursor: pointer;
-}
-
-.plans-table th.sortable:hover {
-  color: var(--text);
-}
-
-.plans-table th.num,
-.plans-table td.num {
-  text-align: right;
-}
-
-.plans-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--row-border);
-  vertical-align: middle;
-}
-
-.plans-table tr:last-child td {
-  border-bottom: none;
-}
-
-.plans-table tr:hover td {
-  background: var(--row-hover);
-}
-
-.operator-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 4px;
-  color: var(--c);
-  background: color-mix(in srgb, var(--c) 10%, transparent);
-  white-space: nowrap;
-}
-
-.plan-name {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.unlimited-tag {
-  display: inline-block;
-  padding: 1px 5px;
-  font-size: 10px;
-  font-weight: 500;
-  border-radius: 3px;
-  background: var(--unlimited-bg);
-  color: var(--unlimited-text);
-}
-
-.daily-cap-tag {
-  display: inline-block;
-  padding: 1px 5px;
-  font-size: 10px;
-  font-weight: 500;
-  border-radius: 3px;
-  background: var(--daily-cap-bg);
-  color: var(--daily-cap-text);
-}
-
-.price-cell {
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.notes-cell {
-  font-size: 11px;
-  color: var(--text-muted);
-  max-width: 200px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 48px 24px;
-  color: var(--text-secondary);
   font-size: 14px;
 }
 
-@media (max-width: 768px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
+.plans-table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-raised);
+}
 
-  .sidebar {
-    position: static;
-  }
+.plans-table th.num { text-align: right; }
 
-  .sort-buttons {
-    flex-wrap: wrap;
-  }
+.plans-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.plans-table tr:last-child td { border-bottom: none; }
+
+.plans-table tr:hover td { background: var(--surface-raised); }
+
+.op-chip {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 6px;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 12%, transparent);
+}
+
+.plan-cell { min-width: 180px; }
+
+.plan-name { font-weight: 600; color: var(--text); }
+
+.plan-notes { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.num { text-align: right; }
+
+.font-mono { font-family: var(--font-mono); font-size: 12px; }
+
+.price-val { font-weight: 700; color: var(--text); }
+
+.badge-unlimited { color: #2563eb; font-weight: 700; }
+
+.badge-cap { color: #d97706; font-weight: 700; }
+
+.empty-state {
+  padding: 80px 24px;
+  text-align: center;
+  background: var(--surface-raised);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.empty-state button {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
 }
 </style>
