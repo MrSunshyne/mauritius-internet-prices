@@ -1,439 +1,426 @@
 <script setup lang="ts">
-import type { SortField } from '~/composables/useMobilePlans'
+import { plans, operators, type MobilePlan } from '~/data/plans'
 
-const {
-  selectedOperators,
-  durationFilter,
-  maxPrice,
-  maxPriceLimit,
-  hideUnlimited,
-  sortField,
-  sortDirection,
-  filteredPlans,
-  operators,
-  formatPrice,
-  formatVolume,
-  formatCostPerGb,
-  formatCostPerDay,
-  formatVolumePerDay,
-  formatDuration,
-  toggleOperator,
-  toggleSort,
-  resetFilters,
-} = useMobilePlans()
-
-const showFilters = ref(true)
-const showNotes = ref(false)
+const { formatPrice, formatVolume, formatDuration, formatCostPerGb, costPerGb, costPerDay } = useMobilePlans()
 
 function operatorColor(slug: string): string {
   return operators.find(op => op.slug === slug)?.color ?? '#888'
 }
 
-function sortIcon(field: SortField): string {
-  if (sortField.value !== field) return ''
-  return sortDirection.value === 'asc' ? ' \u2191' : ' \u2193'
-}
+// Only consider plans with measurable volume for ranked categories
+const measurablePlans = plans.filter(p => p.volumeGb !== null && p.volumeGb > 0)
+
+// Best Value per GB — lowest cost per GB (exclude tiny packs < 1 GB)
+const bestValuePerGb = [...measurablePlans]
+  .filter(p => p.volumeGb! >= 1)
+  .sort((a, b) => (costPerGb(a) ?? Infinity) - (costPerGb(b) ?? Infinity))
+  .slice(0, 3)
+
+// Best Daily Plans — daily packs sorted by value (cost per GB for measurable, then price)
+const bestDaily = [...plans]
+  .filter(p => p.durationDays <= 1)
+  .sort((a, b) => {
+    const aGb = costPerGb(a)
+    const bGb = costPerGb(b)
+    if (aGb !== null && bGb !== null) return aGb - bGb
+    if (aGb !== null) return -1
+    if (bGb !== null) return 1
+    return a.priceMur - b.priceMur
+  })
+  .slice(0, 3)
+
+// Best Monthly Plans — monthly packs (30 days) sorted by cost per GB
+const bestMonthly = [...measurablePlans]
+  .filter(p => p.durationDays === 30 && p.volumeGb! >= 10)
+  .sort((a, b) => (costPerGb(a) ?? Infinity) - (costPerGb(b) ?? Infinity))
+  .slice(0, 3)
+
+// Best for Heavy Users — most total data volume
+const bestHeavyUsers = [...measurablePlans]
+  .sort((a, b) => b.volumeGb! - a.volumeGb!)
+  .slice(0, 3)
+
+// Cheapest Plans — lowest absolute price
+const cheapestPlans = [...plans]
+  .filter(p => p.volumeGb === null || p.volumeGb >= 1)
+  .sort((a, b) => a.priceMur - b.priceMur)
+  .slice(0, 3)
+
+// Best Long-term — 60+ day plans by cost per GB
+const bestLongTerm = [...measurablePlans]
+  .filter(p => p.durationDays >= 60)
+  .sort((a, b) => (costPerGb(a) ?? Infinity) - (costPerGb(b) ?? Infinity))
+  .slice(0, 3)
+
+// Overall Winner — best monthly plan that balances value, volume, and flexibility
+// Score: weighted combination of cost/GB (lower is better), volume (higher is better), duration sweet spot (30 days ideal)
+const overallWinner = [...measurablePlans]
+  .filter(p => p.volumeGb! >= 50 && p.durationDays >= 7)
+  .sort((a, b) => {
+    const aCpg = costPerGb(a) ?? Infinity
+    const bCpg = costPerGb(b) ?? Infinity
+    // Prefer lower cost/GB, tiebreak by higher volume
+    if (Math.abs(aCpg - bCpg) > 0.2) return aCpg - bCpg
+    return b.volumeGb! - a.volumeGb!
+  })[0]
 
 useSeoMeta({
-  title: 'Mauritius Internet Prices - Prepaid Mobile Data Comparison',
-  description: 'Compare prepaid mobile internet data pack prices from my.t, Emtel, and CHILI in Mauritius. Find the best value per GB.',
+  title: 'Mauritius Internet Prices - Best Prepaid Mobile Data Plans',
+  description: 'Find the best prepaid mobile data plans in Mauritius. Compare my.t, Emtel, and CHILI side by side.',
 })
 </script>
 
 <template>
   <main class="main">
-    <button class="filter-toggle" @click="showFilters = !showFilters">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M1 3h14M4 8h8M6 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-      </svg>
-      {{ showFilters ? 'Hide' : 'Show' }} Filters
-    </button>
-
-    <div class="layout" :class="{ 'filters-hidden': !showFilters }">
-      <aside v-show="showFilters" class="sidebar">
-        <div class="filter-section">
-          <h3>Operators</h3>
-          <label
-            v-for="op in operators"
-            :key="op.slug"
-            class="operator-checkbox"
-          >
-            <input
-              type="checkbox"
-              :checked="selectedOperators.includes(op.slug)"
-              @change="toggleOperator(op.slug)"
-            >
-            <span class="operator-dot" :style="{ background: op.color }" />
-            <span>{{ op.name }}</span>
-          </label>
+    <!-- Overall Winner -->
+    <div class="bento">
+      <div class="bento-winner">
+        <div class="winner-label">Overall Best Plan</div>
+        <div class="winner-content">
+          <div class="winner-header">
+            <span class="operator-badge large" :style="{ '--c': operatorColor(overallWinner.operatorSlug) }">
+              {{ overallWinner.operator }}
+            </span>
+            <span class="winner-plan-name">{{ overallWinner.name }}</span>
+          </div>
+          <div class="winner-price">{{ formatPrice(overallWinner.priceMur) }}</div>
+          <div class="winner-stats">
+            <div class="winner-stat">
+              <span class="winner-stat-value">{{ formatVolume(overallWinner) }}</span>
+              <span class="winner-stat-label">Data</span>
+            </div>
+            <div class="winner-stat">
+              <span class="winner-stat-value">{{ formatDuration(overallWinner.durationDays) }}</span>
+              <span class="winner-stat-label">Validity</span>
+            </div>
+            <div class="winner-stat">
+              <span class="winner-stat-value">{{ formatCostPerGb(overallWinner) }}</span>
+              <span class="winner-stat-label">per GB</span>
+            </div>
+          </div>
+          <p class="winner-reason">
+            Best balance of price, data volume, and value per GB across all operators.
+          </p>
         </div>
+      </div>
 
-        <div class="filter-section">
-          <h3>Duration</h3>
-          <div class="duration-buttons">
-            <button :class="{ active: durationFilter === 'all' }" @click="durationFilter = 'all'">All</button>
-            <button :class="{ active: durationFilter === 'daily' }" @click="durationFilter = 'daily'">Daily</button>
-            <button :class="{ active: durationFilter === 'weekly' }" @click="durationFilter = 'weekly'">Weekly</button>
-            <button :class="{ active: durationFilter === 'monthly' }" @click="durationFilter = 'monthly'">Monthly</button>
-            <button :class="{ active: durationFilter === 'long' }" @click="durationFilter = 'long'">60+ days</button>
+      <!-- Best Value per GB -->
+      <div class="bento-card">
+        <h2 class="card-title">Best Value per GB</h2>
+        <p class="card-subtitle">Lowest cost per gigabyte</p>
+        <div class="card-plans">
+          <div v-for="(plan, i) in bestValuePerGb" :key="plan.id" class="plan-row">
+            <span class="rank" :class="`rank-${i + 1}`">{{ i + 1 }}</span>
+            <div class="plan-info">
+              <span class="operator-badge small" :style="{ '--c': operatorColor(plan.operatorSlug) }">{{ plan.operator }}</span>
+              <span class="plan-label">{{ plan.name }}</span>
+            </div>
+            <div class="plan-meta">
+              <strong>{{ formatCostPerGb(plan) }}/GB</strong>
+              <span class="plan-detail">{{ formatVolume(plan) }} &middot; {{ formatPrice(plan.priceMur) }}</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="filter-section">
-          <h3>Max Price</h3>
-          <input
-            v-model.number="maxPrice"
-            type="range"
-            :min="0"
-            :max="maxPriceLimit"
-            :step="5"
-          >
-          <span class="range-value">Rs {{ maxPrice.toLocaleString() }}</span>
-        </div>
-
-        <div class="filter-section">
-          <label class="operator-checkbox">
-            <input v-model="hideUnlimited" type="checkbox">
-            <span>Hide unlimited plans</span>
-          </label>
-          <label class="operator-checkbox">
-            <input v-model="showNotes" type="checkbox">
-            <span>Show notes column</span>
-          </label>
-        </div>
-
-        <button class="reset-btn" @click="resetFilters">
-          Reset Filters
-        </button>
-      </aside>
-
-      <section class="content">
-        <div class="results-bar">
-          <span class="results-count">{{ filteredPlans.length }} plans</span>
-          <div class="sort-buttons">
-            <span class="sort-label">Sort:</span>
-            <button :class="{ active: sortField === 'price' }" @click="toggleSort('price')">
-              Price{{ sortIcon('price') }}
-            </button>
-            <button :class="{ active: sortField === 'volume' }" @click="toggleSort('volume')">
-              Volume{{ sortIcon('volume') }}
-            </button>
-            <button :class="{ active: sortField === 'costPerGb' }" @click="toggleSort('costPerGb')">
-              Rs/GB{{ sortIcon('costPerGb') }}
-            </button>
-            <button :class="{ active: sortField === 'costPerDay' }" @click="toggleSort('costPerDay')">
-              Rs/day{{ sortIcon('costPerDay') }}
-            </button>
-            <button :class="{ active: sortField === 'duration' }" @click="toggleSort('duration')">
-              Duration{{ sortIcon('duration') }}
-            </button>
+      <!-- Best Monthly -->
+      <div class="bento-card">
+        <h2 class="card-title">Best Monthly Plans</h2>
+        <p class="card-subtitle">Top 30-day packs (10 GB+)</p>
+        <div class="card-plans">
+          <div v-for="(plan, i) in bestMonthly" :key="plan.id" class="plan-row">
+            <span class="rank" :class="`rank-${i + 1}`">{{ i + 1 }}</span>
+            <div class="plan-info">
+              <span class="operator-badge small" :style="{ '--c': operatorColor(plan.operatorSlug) }">{{ plan.operator }}</span>
+              <span class="plan-label">{{ plan.name }}</span>
+            </div>
+            <div class="plan-meta">
+              <strong>{{ formatPrice(plan.priceMur) }}</strong>
+              <span class="plan-detail">{{ formatVolume(plan) }} &middot; {{ formatCostPerGb(plan) }}/GB</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="table-wrapper">
-          <table class="plans-table">
-            <thead>
-              <tr>
-                <th>Operator</th>
-                <th>Plan</th>
-                <th class="num sortable" @click="toggleSort('duration')">
-                  Duration{{ sortIcon('duration') }}
-                </th>
-                <th class="num sortable" @click="toggleSort('volume')">
-                  Volume{{ sortIcon('volume') }}
-                </th>
-                <th class="num">Vol/day</th>
-                <th class="num sortable" @click="toggleSort('price')">
-                  Price{{ sortIcon('price') }}
-                </th>
-                <th class="num sortable" @click="toggleSort('costPerDay')">
-                  Rs/day{{ sortIcon('costPerDay') }}
-                </th>
-                <th class="num sortable" @click="toggleSort('costPerGb')">
-                  Rs/GB{{ sortIcon('costPerGb') }}
-                </th>
-                <th v-if="showNotes">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <template v-for="plan in filteredPlans" :key="plan.id">
-                <tr>
-                  <td>
-                    <span class="operator-badge" :style="{ '--c': operatorColor(plan.operatorSlug) }">
-                      {{ plan.operator }}
-                    </span>
-                  </td>
-                  <td class="plan-name">{{ plan.name }}</td>
-                  <td class="num">{{ formatDuration(plan.durationDays) }}</td>
-                  <td class="num">
-                    <span v-if="plan.volumeGb === null" class="unlimited-tag">Unlimited</span>
-                    <template v-else>{{ formatVolume(plan) }}</template>
-                  </td>
-                  <td class="num">
-                    <span v-if="plan.dailyCap" class="daily-cap-tag">{{ plan.dailyCap }} GB/day</span>
-                    <template v-else>{{ formatVolumePerDay(plan) }}</template>
-                  </td>
-                  <td class="num price-cell">
-                    <strong>{{ formatPrice(plan.priceMur) }}</strong>
-                  </td>
-                  <td class="num">{{ formatCostPerDay(plan) }}</td>
-                  <td class="num">{{ formatCostPerGb(plan) }}</td>
-                  <td v-if="showNotes" class="notes-cell">{{ plan.notes }}</td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
+      <!-- Best Daily -->
+      <div class="bento-card">
+        <h2 class="card-title">Best Daily Plans</h2>
+        <p class="card-subtitle">For casual day-to-day use</p>
+        <div class="card-plans">
+          <div v-for="(plan, i) in bestDaily" :key="plan.id" class="plan-row">
+            <span class="rank" :class="`rank-${i + 1}`">{{ i + 1 }}</span>
+            <div class="plan-info">
+              <span class="operator-badge small" :style="{ '--c': operatorColor(plan.operatorSlug) }">{{ plan.operator }}</span>
+              <span class="plan-label">{{ plan.name }}</span>
+            </div>
+            <div class="plan-meta">
+              <strong>{{ formatPrice(plan.priceMur) }}</strong>
+              <span class="plan-detail">{{ formatVolume(plan) }} &middot; 1 day</span>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div v-if="filteredPlans.length === 0" class="empty-state">
-          No plans match your filters. Try adjusting your criteria.
+      <!-- Cheapest -->
+      <div class="bento-card">
+        <h2 class="card-title">Cheapest Plans</h2>
+        <p class="card-subtitle">Lowest absolute price (1 GB+)</p>
+        <div class="card-plans">
+          <div v-for="(plan, i) in cheapestPlans" :key="plan.id" class="plan-row">
+            <span class="rank" :class="`rank-${i + 1}`">{{ i + 1 }}</span>
+            <div class="plan-info">
+              <span class="operator-badge small" :style="{ '--c': operatorColor(plan.operatorSlug) }">{{ plan.operator }}</span>
+              <span class="plan-label">{{ plan.name }}</span>
+            </div>
+            <div class="plan-meta">
+              <strong>{{ formatPrice(plan.priceMur) }}</strong>
+              <span class="plan-detail">{{ formatVolume(plan) }} &middot; {{ formatDuration(plan.durationDays) }}</span>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
+
+      <!-- Most Data -->
+      <div class="bento-card">
+        <h2 class="card-title">Most Data</h2>
+        <p class="card-subtitle">For heavy data users</p>
+        <div class="card-plans">
+          <div v-for="(plan, i) in bestHeavyUsers" :key="plan.id" class="plan-row">
+            <span class="rank" :class="`rank-${i + 1}`">{{ i + 1 }}</span>
+            <div class="plan-info">
+              <span class="operator-badge small" :style="{ '--c': operatorColor(plan.operatorSlug) }">{{ plan.operator }}</span>
+              <span class="plan-label">{{ plan.name }}</span>
+            </div>
+            <div class="plan-meta">
+              <strong>{{ formatVolume(plan) }}</strong>
+              <span class="plan-detail">{{ formatPrice(plan.priceMur) }} &middot; {{ formatDuration(plan.durationDays) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best Long-term -->
+      <div class="bento-card">
+        <h2 class="card-title">Best Long-term</h2>
+        <p class="card-subtitle">60+ day bulk plans</p>
+        <div class="card-plans">
+          <div v-for="(plan, i) in bestLongTerm" :key="plan.id" class="plan-row">
+            <span class="rank" :class="`rank-${i + 1}`">{{ i + 1 }}</span>
+            <div class="plan-info">
+              <span class="operator-badge small" :style="{ '--c': operatorColor(plan.operatorSlug) }">{{ plan.operator }}</span>
+              <span class="plan-label">{{ plan.name }}</span>
+            </div>
+            <div class="plan-meta">
+              <strong>{{ formatCostPerGb(plan) }}/GB</strong>
+              <span class="plan-detail">{{ formatVolume(plan) }} &middot; {{ formatPrice(plan.priceMur) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <NuxtLink to="/compare" class="cta-link">
+        View all 27 plans in the full comparison table
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </NuxtLink>
     </div>
   </main>
 </template>
 
 <style scoped>
 .main {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 16px 24px 48px;
+  padding: 24px 24px 48px;
 }
 
-.filter-toggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+.bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Winner card spans full width */
+.bento-winner {
+  grid-column: 1 / -1;
   background: var(--surface);
-  cursor: pointer;
-  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-winner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f59e0b, #eab308, #f59e0b);
+}
+
+.winner-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #f59e0b;
   margin-bottom: 16px;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 24px;
-  align-items: start;
+.winner-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.layout.filters-hidden {
-  grid-template-columns: 1fr;
-}
-
-.sidebar {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  position: sticky;
-  top: 72px;
-}
-
-.filter-section {
-  margin-bottom: 20px;
-}
-
-.filter-section h3 {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-}
-
-.operator-checkbox {
+.winner-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 4px 0;
+  gap: 12px;
 }
 
-.operator-checkbox input {
-  accent-color: var(--text);
+.winner-plan-name {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-.operator-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.duration-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.duration-buttons button {
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.15s;
-}
-
-.duration-buttons button.active {
-  background: var(--active-btn-bg);
-  color: var(--active-btn-text);
-  border-color: var(--active-btn-bg);
-}
-
-.filter-section input[type="range"] {
-  width: 100%;
-  accent-color: var(--text);
-}
-
-.range-value {
-  font-size: 13px;
-  color: var(--text-secondary);
+.winner-price {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 
-.reset-btn {
-  width: 100%;
-  padding: 8px;
+.winner-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 4px;
+}
+
+.winner-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.winner-stat-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.winner-stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.winner-reason {
   font-size: 13px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-  cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.15s;
+  margin-top: 4px;
 }
 
-.reset-btn:hover {
+/* Category cards */
+.bento-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.card-plans {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plan-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.rank {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
   background: var(--bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
 }
 
-.content {
+.rank-1 {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fbbf24;
+}
+
+html.dark .rank-1 {
+  background: #422006;
+  color: #fbbf24;
+  border-color: #92400e;
+}
+
+.plan-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
   min-width: 0;
 }
 
-.results-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 12px;
-  flex-wrap: wrap;
+.plan-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
 }
 
-.results-count {
+.plan-meta {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.plan-meta strong {
+  display: block;
   font-size: 13px;
-  color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
-.sort-buttons {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.sort-label {
-  font-size: 12px;
+.plan-detail {
+  font-size: 11px;
   color: var(--text-muted);
-  margin-right: 4px;
-}
-
-.sort-buttons button {
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.15s;
   white-space: nowrap;
 }
 
-.sort-buttons button.active {
-  background: var(--active-btn-bg);
-  color: var(--active-btn-text);
-  border-color: var(--active-btn-bg);
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-}
-
-.plans-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.plans-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.plans-table th {
-  background: var(--table-header);
-  padding: 10px 12px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-  user-select: none;
-}
-
-.plans-table th.sortable {
-  cursor: pointer;
-}
-
-.plans-table th.sortable:hover {
-  color: var(--text);
-}
-
-.plans-table th.num,
-.plans-table td.num {
-  text-align: right;
-}
-
-.plans-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--row-border);
-  vertical-align: middle;
-}
-
-.plans-table tr:last-child td {
-  border-bottom: none;
-}
-
-.plans-table tr:hover td {
-  background: var(--row-hover);
-}
-
+/* Badges */
 .operator-badge {
   display: inline-block;
-  padding: 2px 8px;
-  font-size: 12px;
   font-weight: 600;
   border-radius: 4px;
   color: var(--c);
@@ -441,62 +428,59 @@ useSeoMeta({
   white-space: nowrap;
 }
 
-.plan-name {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
+.operator-badge.large {
+  padding: 3px 10px;
+  font-size: 13px;
 }
 
-.unlimited-tag {
-  display: inline-block;
-  padding: 1px 5px;
-  font-size: 10px;
-  font-weight: 500;
-  border-radius: 3px;
-  background: var(--unlimited-bg);
-  color: var(--unlimited-text);
-}
-
-.daily-cap-tag {
-  display: inline-block;
-  padding: 1px 5px;
-  font-size: 10px;
-  font-weight: 500;
-  border-radius: 3px;
-  background: var(--daily-cap-bg);
-  color: var(--daily-cap-text);
-}
-
-.price-cell {
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.notes-cell {
+.operator-badge.small {
+  padding: 1px 6px;
   font-size: 11px;
-  color: var(--text-muted);
-  max-width: 200px;
 }
 
-.empty-state {
+/* CTA */
+.cta-row {
+  margin-top: 24px;
   text-align: center;
-  padding: 48px 24px;
-  color: var(--text-secondary);
-  font-size: 14px;
 }
 
-@media (max-width: 768px) {
-  .layout {
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: all 0.15s;
+}
+
+.cta-link:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .bento {
     grid-template-columns: 1fr;
   }
 
-  .sidebar {
-    position: static;
+  .winner-stats {
+    flex-wrap: wrap;
+    gap: 16px;
   }
 
-  .sort-buttons {
-    flex-wrap: wrap;
+  .winner-price {
+    font-size: 28px;
   }
 }
 </style>

@@ -31,7 +31,8 @@ function applyTheme() {
             <h1>Mauritius Internet Prices</h1>
           </NuxtLink>
           <nav class="header-nav">
-            <NuxtLink to="/" :class="{ active: route.path === '/' || route.path === '/mauritius-internet-prices/' }">Compare</NuxtLink>
+            <NuxtLink to="/" :class="{ active: route.path === '/' || route.path === '/mauritius-internet-prices/' }">Home</NuxtLink>
+            <NuxtLink to="/compare" :class="{ active: route.path === '/compare' || route.path === '/mauritius-internet-prices/compare' }">Compare</NuxtLink>
             <NuxtLink to="/operators" :class="{ active: route.path === '/operators' || route.path === '/mauritius-internet-prices/operators' }">Operators</NuxtLink>
           </nav>
         </div>
