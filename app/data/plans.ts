@@ -18,24 +18,24 @@ export const operators = [
     name: 'my.t',
     fullName: 'Mauritius Telecom',
     website: 'https://www.myt.mu/mobile/prepaid-mobile-data',
-    color: '#059669',
-    description: 'Mauritius Telecom\'s mobile brand. Largest network in Mauritius with 4G/5G coverage. Data packs activated via SMS to 8684.',
+    color: '#5FAEE3', // my.t Brand Blue
+    description: 'The primary telecommunications provider in Mauritius, operating 4G and 5G mobile networks. Prepaid data services are provisioned via SMS codes to 8684 or through the My.t mobile application.',
   },
   {
     slug: 'emtel' as const,
     name: 'Emtel',
     fullName: 'Emtel Ltd',
     website: 'https://www.emtel.com/mobile-services/prepaid/unlimited-data-packs',
-    color: '#2563eb',
-    description: 'Second largest mobile operator in Mauritius. Offers prepaid data packs with fair usage policies. Speed reduced to 256 Kbps after daily quota on some plans.',
+    color: '#ff0000', // Emtel Red
+    description: 'A mobile network operator providing 4G and 5G infrastructure. Data services include volume-based and duration-based packages, governed by a Fair Usage Policy (FUP) that throttles speeds after specific thresholds.',
   },
   {
     slug: 'chili' as const,
     name: 'CHILI',
     fullName: 'MTML (Mahanagar Telephone Mauritius Limited)',
     website: 'https://chili.mu/mobile-data-combo-packs/',
-    color: '#dc2626',
-    description: 'Third mobile operator in Mauritius (MTML). Competitive pricing with wide range of data packs from daily to 3-month bundles.',
+    color: '#ff0088', // CHILI Brand Pink
+    description: 'The mobile brand of Mahanagar Telephone Mauritius Limited (MTML). Provides data services through combo packs and standalone bundles, with infrastructure supporting 4G connectivity.',
   },
 ]
 
