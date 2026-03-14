@@ -1,47 +1,36 @@
 # Mauritius Internet Prices
 
-An open source project to visualize bandwidth and pricing of various prepaid mobile internet packages available in Mauritius.
+An open source project to compare prepaid mobile internet data pack prices from all operators in Mauritius.
+
+## Operators Tracked
+
+- **my.t** (Mauritius Telecom)
+- **Emtel**
+- **CHILI** (MTML)
 
 ## Data Source
 
-The details regarding all packages are taken from publicly advertised prices from the websites of the service providers.
+All prices are taken from publicly advertised prices on operator websites. Data is stored as TypeScript files in `app/data/plans.ts`.
 
-You can see the list [here](https://docs.google.com/spreadsheets/d/1i1_6IOA4wdm5Cl-hXRf46Dkwqz5bMcN3KdFcaGahbV0/) with a link to the pricing page on the same row.
+## Tech Stack
 
-## Design & Wireframe
+- Nuxt 4 (Vue 3)
+- TypeScript
+- Static site generation (GitHub Pages)
 
-We are using Figma to explore the UI possibilities of this project.
-You can take a look [here](https://www.figma.com/file/bWPF6c87cchw1Z95QmwWBL/Prepaid-Mobile-Internet-Mauritius?node-id=0%3A1)
-
-## Contribute
-
-If you would like to contribute, reach out to me on Twitter, create a Github issue or even better, send a PR !
-
-## Why are you doing this ? Is this advertisment for a company ?
-
-No. I have been a heavy internet user for many years and I love remote work. Comparing prepaid mobile internet is something I care about, and I though it would be worth sharing some kind of interactive infographic using the publicly available information.
-
-## Why Open Source this ?
-
-Why not ?
-
-## Technical Stuff
-
-### Tech Stack
-
-- Vue 3
-- TailwindCSS
-<!-- - Highcharts -->
-- Google Sheets API v4 (as database)
-
-### Project setup
+## Development
 
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-
-```
 npm run dev
 ```
+
+## Build
+
+```
+npm run generate
+```
+
+## Contribute
+
+If you notice outdated prices or missing plans, feel free to open a PR updating `app/data/plans.ts`.
