@@ -28,6 +28,8 @@ jobs:
       - run: npm ci
 
       - run: npx nuxt generate
+        env:
+          NUXT_APP_BASE_URL: /mauritius-internet-prices/
 
       - uses: actions/upload-pages-artifact@v3
         with:

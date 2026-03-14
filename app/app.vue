@@ -31,9 +31,9 @@ function applyTheme() {
         </NuxtLink>
 
         <nav class="header-nav">
-          <NuxtLink to="/" :class="{ active: route.path === '/' || route.path === '/mauritius-internet-prices/' }">Home</NuxtLink>
-          <NuxtLink to="/compare" :class="{ active: route.path === '/compare' || route.path === '/mauritius-internet-prices/compare' }">Compare</NuxtLink>
-          <NuxtLink to="/operators" :class="{ active: route.path === '/operators' || route.path === '/mauritius-internet-prices/operators' }">Operators</NuxtLink>
+          <NuxtLink to="/" :class="{ active: route.name === 'index' }">Home</NuxtLink>
+          <NuxtLink to="/compare" :class="{ active: route.name === 'compare' }">Compare</NuxtLink>
+          <NuxtLink to="/operators" :class="{ active: route.name === 'operators' }">Operators</NuxtLink>
         </nav>
 
         <div class="header-actions">
