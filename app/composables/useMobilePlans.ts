@@ -106,6 +106,10 @@ export function useMobilePlans() {
   }
 
   function formatDuration(days: number): string {
+    if (days < 1) {
+      const hours = Math.round(days * 24)
+      return hours === 1 ? '1 hour' : `${hours} hours`
+    }
     if (days === 1) return '1 day'
     if (days <= 7) return `${days} days`
     if (days === 30) return '1 month'

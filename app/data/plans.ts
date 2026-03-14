@@ -47,7 +47,7 @@ export const plans: MobilePlan[] = [
     operatorSlug: 'myt',
     name: '1-Hour',
     volumeGb: null,
-    durationDays: 1,
+    durationDays: 1 / 24,
     priceMur: 5,
     vatInclusive: true,
     dailyCap: null,
