@@ -26,16 +26,16 @@ function applyTheme() {
   <div class="app">
     <header class="header">
       <div class="header-inner">
-        <div class="header-left">
-          <NuxtLink to="/" class="header-title">
-            <h1>Mauritius Internet Prices</h1>
-          </NuxtLink>
-          <nav class="header-nav">
-            <NuxtLink to="/" :class="{ active: route.path === '/' || route.path === '/mauritius-internet-prices/' }">Home</NuxtLink>
-            <NuxtLink to="/compare" :class="{ active: route.path === '/compare' || route.path === '/mauritius-internet-prices/compare' }">Compare</NuxtLink>
-            <NuxtLink to="/operators" :class="{ active: route.path === '/operators' || route.path === '/mauritius-internet-prices/operators' }">Operators</NuxtLink>
-          </nav>
-        </div>
+        <NuxtLink to="/" class="header-title">
+          <h1>Mauritius Internet Prices</h1>
+        </NuxtLink>
+
+        <nav class="header-nav">
+          <NuxtLink to="/" :class="{ active: route.path === '/' || route.path === '/mauritius-internet-prices/' }">Home</NuxtLink>
+          <NuxtLink to="/compare" :class="{ active: route.path === '/compare' || route.path === '/mauritius-internet-prices/compare' }">Compare</NuxtLink>
+          <NuxtLink to="/operators" :class="{ active: route.path === '/operators' || route.path === '/mauritius-internet-prices/operators' }">Operators</NuxtLink>
+        </nav>
+
         <div class="header-actions">
           <a
             href="https://github.com/MrSunshyne/mauritius-internet-prices"
@@ -65,18 +65,12 @@ function applyTheme() {
 
     <footer class="page-footer">
       <p>
-        Prices fetched March 2026. Verify on operator websites before purchasing.
-        All prices in Mauritian Rupees (MUR), VAT inclusive.
+        Data last verified March 2026. All prices in Mauritian Rupees (MUR), VAT inclusive.
       </p>
-      <p>
-        <a
-          v-for="(op, i) in operators"
-          :key="op.slug"
-          :href="op.website"
-          target="_blank"
-          rel="noopener noreferrer"
-        >{{ op.name }}<span v-if="i < operators.length - 1"> &middot; </span></a>
-      </p>
+      <div class="author-info">
+        Built and maintained by <a href="https://github.com/MrSunshyne" target="_blank" rel="noopener noreferrer">Sandeep Ramgolam</a>.
+        An open-source project to help Mauritians find better data value.
+      </div>
     </footer>
   </div>
 </template>
@@ -90,43 +84,48 @@ function applyTheme() {
 }
 
 :root {
-  --bg: #fafafa;
-  --surface: #fff;
-  --border: #e5e5e5;
-  --text: #171717;
-  --text-secondary: #737373;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-raised: #f8f8f8;
+  --border: #e8e8e8;
+  --border-subtle: #f0f0f0;
+  --text: #0a0a0a;
+  --text-secondary: #525252;
   --text-muted: #a3a3a3;
-  --table-header: #f5f5f5;
-  --row-border: #f0f0f0;
-  --row-hover: #fafafa;
-  --active-btn-bg: #171717;
-  --active-btn-text: #fff;
-  --unlimited-bg: #eff6ff;
-  --unlimited-text: #1d4ed8;
-  --daily-cap-bg: #fef3c7;
-  --daily-cap-text: #92400e;
-  --radius: 6px;
-  --radius-lg: 8px;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+  --accent: #000000;
+  --accent-soft: rgba(0, 0, 0, 0.05);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-flat: 0 0 0 1px var(--border);
+  
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', SFMono-Regular, ui-monospace, monospace;
 }
 
 html.dark {
-  --bg: #0a0a0a;
-  --surface: #171717;
-  --border: #2e2e2e;
-  --text: #e5e5e5;
+  --bg: #050505;
+  --surface: #0a0a0a;
+  --surface-raised: #121212;
+  --border: #1a1a1a;
+  --border-subtle: #141414;
+  --text: #f5f5f5;
   --text-secondary: #a3a3a3;
-  --text-muted: #636363;
-  --table-header: #1c1c1c;
-  --row-border: #222;
-  --row-hover: #1c1c1c;
-  --active-btn-bg: #e5e5e5;
-  --active-btn-text: #0a0a0a;
-  --unlimited-bg: #172554;
-  --unlimited-text: #93c5fd;
-  --daily-cap-bg: #422006;
-  --daily-cap-text: #fbbf24;
+  --text-muted: #525252;
+  --accent: #ffffff;
+  --accent-soft: rgba(255, 255, 255, 0.05);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  --shadow-flat: 0 0 0 1px var(--border);
   color-scheme: dark;
 }
 
@@ -134,49 +133,46 @@ body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header {
-  background: var(--surface);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
 }
 
 .header-inner {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  height: 56px;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
-
-.header-title {
-  text-decoration: none;
-  color: inherit;
+  height: 64px;
 }
 
 .header-title h1 {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(to bottom right, var(--text), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
 }
 
 .header-nav {
@@ -185,22 +181,18 @@ a {
 }
 
 .header-nav a {
-  padding: 6px 12px;
-  font-size: 13px;
+  padding: 8px 12px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
-  border-radius: var(--radius);
-  transition: all 0.15s;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
 }
 
-.header-nav a:hover {
-  color: var(--text);
-  background: var(--bg);
-}
-
+.header-nav a:hover,
 .header-nav a.active {
   color: var(--text);
-  background: var(--bg);
+  background: var(--accent-soft);
 }
 
 .header-actions {
@@ -209,74 +201,95 @@ a {
   gap: 8px;
 }
 
-.github-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-  cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.15s;
-}
-
-.github-link:hover {
-  color: var(--text);
-  background: var(--bg);
-}
-
+.github-link,
 .theme-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: transparent;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
   cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
+.github-link:hover,
 .theme-toggle:hover {
   color: var(--text);
-  background: var(--bg);
+  background: var(--accent-soft);
+  border-color: var(--text-muted);
 }
 
 .page-footer {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px 24px 48px;
+  max-width: 1200px;
+  margin: 64px auto 0;
+  padding: 64px 24px;
   border-top: 1px solid var(--border);
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
-  line-height: 1.8;
 }
 
-.page-footer a {
+.page-footer p {
+  margin-bottom: 8px;
+}
+
+.author-info {
+  margin-top: 16px;
   color: var(--text-secondary);
+}
+
+.author-info a {
+  color: var(--text);
+  font-weight: 600;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border);
+}
+
+.author-info a:hover {
+  text-decoration-color: var(--text);
 }
 
 @media (max-width: 768px) {
   .header-inner {
-    flex-direction: column;
-    align-items: flex-start;
+    display: grid;
+    grid-template-areas: "title actions" "nav nav";
+    grid-template-columns: 1fr auto;
     height: auto;
-    padding: 12px 24px;
+    padding: 12px 16px;
     gap: 8px;
   }
-
-  .header-left {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+  
+  .header-title {
+    grid-area: title;
+  }
+  
+  .header-actions {
+    grid-area: actions;
+    justify-self: end;
+  }
+  
+  .header-nav {
+    grid-area: nav;
+    width: 100%;
+    overflow-x: auto;
+    padding: 4px 0;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .header-nav::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .header-nav a {
+    padding: 6px 10px;
+    font-size: 13px;
   }
 }
 </style>
