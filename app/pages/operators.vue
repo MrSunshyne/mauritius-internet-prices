@@ -2,176 +2,168 @@
 const { operators } = useMobilePlans()
 
 useSeoMeta({
-  title: 'Operators - Mauritius Internet Prices',
-  description: 'Learn about mobile operators in Mauritius: my.t (Mauritius Telecom), Emtel, and CHILI (MTML).',
+  title: 'Service Providers — The Data Report',
+  description: 'Analysis of the main mobile network operators in Mauritius: my.t, Emtel, and CHILI.',
 })
 </script>
 
 <template>
-  <main class="main">
-    <header class="hero">
-      <h1 class="hero-title">Mobile Operators</h1>
-      <p class="hero-subtitle">
-        The three main telecommunication providers in Mauritius, offering a wide range of prepaid mobile data services.
-      </p>
+  <main class="content">
+    <header class="page-header">
+      <div class="header-content">
+        <h1 class="page-title">Service <span class="italic">Providers</span></h1>
+        <p class="page-subtitle">A directory of the primary telecommunication entities operating in the Mauritian market.</p>
+      </div>
     </header>
 
-    <div class="operator-grid">
-      <a
+    <div class="operator-list">
+      <div
         v-for="op in operators"
         :key="op.slug"
-        :href="op.website"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="operator-card"
+        class="operator-section"
         :style="{ '--c': op.color }"
       >
-        <div class="card-header">
-          <span class="operator-name">{{ op.name }}</span>
-          <div class="external-icon">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path d="M6 3h7m0 0v7m0-7L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </div>
+        <div class="op-sidebar">
+          <span class="op-slug">{{ op.slug }}</span>
+          <div class="op-color-bar"></div>
         </div>
-        <h2 class="full-name">{{ op.fullName }}</h2>
-        <p class="description">{{ op.description }}</p>
-        <div class="visit-link">Visit Website</div>
-      </a>
+        
+        <div class="op-content">
+          <header class="op-header">
+            <h2 class="op-name">{{ op.name }}</h2>
+            <span class="op-fullname">{{ op.fullName }}</span>
+          </header>
+          
+          <p class="op-description">{{ op.description }}</p>
+          
+          <footer class="op-footer">
+            <a :href="op.website" target="_blank" rel="noopener noreferrer" class="op-link">
+              Operator Pricing Reference &rarr;
+            </a>
+          </footer>
+        </div>
+      </div>
     </div>
   </main>
 </template>
 
 <style scoped>
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 64px 24px;
+/* Content Area */
+.content {
+  max-width: 1000px;
+  padding: 80px 60px;
 }
 
-.hero {
-  text-align: center;
-  margin-bottom: 64px;
+.page-header {
+  margin-bottom: 80px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
 }
 
-.hero-title {
+.page-title {
+  font-family: var(--font-serif);
   font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  margin-bottom: 16px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
 }
 
-.hero-subtitle {
-  font-size: 18px;
+.page-title .italic { font-style: italic; }
+
+.page-subtitle {
+  font-size: 16px;
   color: var(--text-secondary);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
+  margin-top: 8px;
 }
 
-.operator-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 24px;
-}
-
-.operator-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 40px;
+.operator-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  gap: 100px;
 }
 
-.operator-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--c);
-  opacity: 0.6;
-}
-
-.operator-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--c);
-  box-shadow: 0 20px 40px -20px color-mix(in srgb, var(--c) 20%, transparent);
-}
-
-.card-header {
+.operator-section {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 40px;
 }
 
-.operator-name {
-  font-size: 14px;
+.op-sidebar {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.op-slug {
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--c);
-}
-
-.external-icon {
+  letter-spacing: 0.2em;
   color: var(--text-muted);
-  transition: transform 0.2s;
 }
 
-.operator-card:hover .external-icon {
-  transform: translate(2px, -2px);
-  color: var(--c);
+.op-color-bar {
+  height: 4px;
+  width: 100%;
+  background: var(--c);
 }
 
-.full-name {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text);
+.op-content {
+  flex: 1;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 12px;
 }
 
-.description {
-  font-size: 15px;
-  color: var(--text-secondary);
-  line-height: 1.6;
+.op-header {
+  margin-bottom: 24px;
 }
 
-.visit-link {
-  margin-top: auto;
+.op-name {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.op-fullname {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.op-description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+
+.op-link {
+  font-size: 14px;
+  font-weight: 700;
   color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-color: var(--border-subtle);
+  transition: all 0.2s;
 }
 
-.visit-link::after {
-  content: ' \2192';
-  transition: transform 0.2s;
+.op-link:hover {
+  text-decoration-color: var(--c);
 }
 
-.operator-card:hover .visit-link::after {
-  transform: translateX(4px);
+@media (max-width: 900px) {
+  .content { padding: 40px 24px; }
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 36px;
-  }
-  
-  .operator-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .operator-card {
-    padding: 32px;
-  }
+  .page-title { font-size: 36px; }
+  .operator-section { flex-direction: column; gap: 20px; }
+  .op-sidebar { width: 100%; }
+  .op-description { font-size: 16px; }
+  .operator-list { gap: 60px; }
 }
 </style>
