@@ -20,6 +20,13 @@ function toggleDark() {
 function applyTheme() {
   document.documentElement.classList.toggle('dark', dark.value)
 }
+
+const sidebarTitle = computed(() => {
+  const path = route.path.replace(/\/$/, '')
+  if (path.includes('/compare')) return 'MARKET COMPARISON / 2026'
+  if (path.includes('/operators')) return 'NETWORK OPERATORS / 2026'
+  return 'THE DATA REPORT / 2026'
+})
 </script>
 
 <template>
@@ -27,13 +34,13 @@ function applyTheme() {
     <header class="header">
       <div class="header-inner">
         <NuxtLink to="/" class="header-title">
-          <h1>Mauritius Internet Prices</h1>
+          <h1>Mauritius <span class="italic">Internet Prices</span></h1>
         </NuxtLink>
 
         <nav class="header-nav">
-          <NuxtLink to="/" :class="{ active: route.name === 'index' }">Home</NuxtLink>
-          <NuxtLink to="/compare" :class="{ active: route.name === 'compare' }">Compare</NuxtLink>
-          <NuxtLink to="/operators" :class="{ active: route.name === 'operators' }">Operators</NuxtLink>
+          <NuxtLink to="/" :class="{ active: route.path === '/' || route.path === '/mauritius-internet-prices/' }">The Report</NuxtLink>
+          <NuxtLink to="/compare" :class="{ active: route.path === '/compare' || route.path === '/mauritius-internet-prices/compare' }">All Plans</NuxtLink>
+          <NuxtLink to="/operators" :class="{ active: route.path === '/operators' || route.path === '/mauritius-internet-prices/operators' }">Operators</NuxtLink>
         </nav>
 
         <div class="header-actions">
@@ -51,7 +58,7 @@ function applyTheme() {
           <button class="theme-toggle" :title="dark ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleDark">
             <svg v-if="dark" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" />
-              <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M8 1v2M8 13v2M1 8h2M13 8h2 suicide-3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
             </svg>
             <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M14 9.2A6.5 6.5 0 0 1 6.8 2 6 6 0 1 0 14 9.2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -61,15 +68,29 @@ function applyTheme() {
       </div>
     </header>
 
-    <NuxtPage />
+    <div class="magazine-shell">
+      <aside class="side-nav">
+        <div class="vertical-title">{{ sidebarTitle }}</div>
+        <div class="issue-no">ISSUE NO. 01</div>
+      </aside>
+
+      <div class="main-view">
+        <NuxtPage />
+      </div>
+    </div>
 
     <footer class="page-footer">
-      <p>
-        Data last verified March 2026. All prices in Mauritian Rupees (MUR), VAT inclusive.
-      </p>
-      <div class="author-info">
-        Built and maintained by <a href="https://github.com/MrSunshyne" target="_blank" rel="noopener noreferrer">Sandeep Ramgolam</a>.
-        An open-source project to help Mauritians find better data value.
+      <div class="footer-inner">
+        <div class="footer-col brand-col">
+          <span class="footer-title">THE DATA REPORT</span>
+          <p class="footer-subtitle">Independent analysis of Mauritian mobile data markets.</p>
+        </div>
+        <div class="footer-col legal-col">
+          <p>Verified March 2026. All prices MUR / VAT inclusive.</p>
+          <div class="author-info">
+            Built by <a href="https://github.com/MrSunshyne" target="_blank" rel="noopener noreferrer">Sandeep Ramgolam</a>.
+          </div>
+        </div>
       </div>
     </footer>
   </div>
@@ -86,46 +107,41 @@ function applyTheme() {
 :root {
   --bg: #ffffff;
   --surface: #ffffff;
-  --surface-raised: #f8f8f8;
-  --border: #e8e8e8;
-  --border-subtle: #f0f0f0;
-  --text: #0a0a0a;
-  --text-secondary: #525252;
-  --text-muted: #a3a3a3;
+  --surface-raised: #f2f2f2;
+  --border: #1a1a1a;
+  --border-subtle: #e5e5e5;
+  --text: #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted: #888888;
   --accent: #000000;
-  --accent-soft: rgba(0, 0, 0, 0.05);
+  --accent-soft: rgba(0, 0, 0, 0.03);
   
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 32px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
   
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
   --shadow-flat: 0 0 0 1px var(--border);
   
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Georgia', 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', SFMono-Regular, ui-monospace, monospace;
 }
 
 html.dark {
-  --bg: #050505;
+  --bg: #0a0a0a;
   --surface: #0a0a0a;
-  --surface-raised: #121212;
-  --border: #1a1a1a;
-  --border-subtle: #141414;
+  --surface-raised: #111111;
+  --border: #f5f5f5;
+  --border-subtle: #222222;
   --text: #f5f5f5;
   --text-secondary: #a3a3a3;
-  --text-muted: #525252;
+  --text-muted: #666666;
   --accent: #ffffff;
-  --accent-soft: rgba(255, 255, 255, 0.05);
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
-  --shadow-flat: 0 0 0 1px var(--border);
+  --accent-soft: rgba(255, 255, 255, 0.03);
   color-scheme: dark;
 }
 
@@ -152,41 +168,47 @@ a {
   z-index: 50;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
 }
 
 .header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
   padding: 0 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 64px;
 }
 
+.header-title {
+  margin-right: 48px;
+}
+
 .header-title h1 {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  background: linear-gradient(to bottom right, var(--text), var(--text-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text);
   white-space: nowrap;
 }
+
+.header-title .italic { font-style: italic; }
 
 .header-nav {
   display: flex;
-  gap: 4px;
+  height: 100%;
+  flex: 1;
 }
 
 .header-nav a {
-  padding: 8px 12px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--text-secondary);
-  border-radius: var(--radius-md);
-  white-space: nowrap;
 }
 
 .header-nav a:hover,
@@ -198,7 +220,8 @@ a {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0;
+  margin-left: auto;
 }
 
 .github-link,
@@ -206,52 +229,132 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
+  width: 48px;
+  height: 64px;
   background: transparent;
-  border: 1px solid var(--border);
+  border: none;
+  border-left: 1px solid var(--border-subtle);
   cursor: pointer;
   color: var(--text-secondary);
   transition: all 0.2s;
 }
 
-.github-link:hover,
-.theme-toggle:hover {
-  color: var(--text);
-  background: var(--accent-soft);
-  border-color: var(--text-muted);
+/* Shell Layout */
+.magazine-shell {
+  display: flex;
+  min-height: calc(100vh - 64px);
+}
+
+.side-nav {
+  width: 80px;
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 0;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  background: var(--bg);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.vertical-title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.issue-no {
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.main-view {
+  flex: 1;
+  min-width: 0;
 }
 
 .page-footer {
-  max-width: 1200px;
-  margin: 64px auto 0;
-  padding: 64px 24px;
+  background: var(--surface-raised);
   border-top: 1px solid var(--border);
-  text-align: center;
-  font-size: 13px;
-  color: var(--text-muted);
+  padding: 80px 24px 80px 164px; /* 80px sidebar + 60px content padding + 24px base padding */
+  width: 100%;
 }
 
-.page-footer p {
+.footer-inner {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  text-align: left;
+}
+
+.footer-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  display: block;
   margin-bottom: 8px;
 }
 
-.author-info {
-  margin-top: 16px;
+.footer-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.footer-legal {
+  font-size: 13px;
   color: var(--text-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+}
+
+.author-info {
+  margin-top: 8px;
+  font-weight: 700;
 }
 
 .author-info a {
-  color: var(--text);
-  font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-color: var(--border);
+  text-decoration-color: var(--text-muted);
 }
 
 .author-info a:hover {
   text-decoration-color: var(--text);
+}
+
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (max-width: 1024px) {
+  .header-nav a { padding: 0 12px; font-size: 11px; }
+  .header-title { margin-right: 24px; }
+}
+
+@media (max-width: 900px) {
+  .side-nav { display: none; }
+  .page-footer { padding: 64px 24px; }
 }
 
 @media (max-width: 768px) {
@@ -260,36 +363,47 @@ a {
     grid-template-areas: "title actions" "nav nav";
     grid-template-columns: 1fr auto;
     height: auto;
-    padding: 12px 16px;
-    gap: 8px;
+    padding: 0;
+    gap: 0;
   }
   
   .header-title {
     grid-area: title;
+    padding: 16px;
+    margin-right: 0;
   }
   
   .header-actions {
     grid-area: actions;
-    justify-self: end;
+    height: 100%;
+  }
+  
+  .github-link, .theme-toggle {
+    height: 56px;
   }
   
   .header-nav {
     grid-area: nav;
     width: 100%;
     overflow-x: auto;
-    padding: 4px 0;
-    margin: 0;
+    border-top: 1px solid var(--border-subtle);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
   
-  .header-nav::-webkit-scrollbar {
-    display: none;
+  .header-nav a {
+    height: 48px;
+    white-space: nowrap;
+  }
+
+  .footer-inner {
+    text-align: left;
+    align-items: flex-start;
   }
   
-  .header-nav a {
-    padding: 6px 10px;
-    font-size: 13px;
+  .footer-legal {
+    text-align: left;
+    width: 100%;
   }
 }
 </style>
