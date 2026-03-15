@@ -22,6 +22,9 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: 'Independent analysis and comparative pricing of all major mobile data plans in Mauritius.' },
         { name: 'twitter:image', content: 'https://mobile-data.ramgolam.com/og-image.png' },
       ],
+      script: [
+        { src: 'https://cloud.umami.is/script.js', defer: true, 'data-website-id': '883dbbfd-089a-4083-86a9-911a349268f0' },
+      ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
       ],
