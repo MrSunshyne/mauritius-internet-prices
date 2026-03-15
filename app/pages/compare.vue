@@ -25,6 +25,12 @@ const {
 const showFilters = ref(true)
 const showNotes = ref(false)
 
+onMounted(() => {
+  if (window.innerWidth < 768) {
+    showFilters.value = false
+  }
+})
+
 function operatorColor(slug: string): string {
   return operators.find(op => op.slug === slug)?.color ?? '#888'
 }
@@ -129,7 +135,8 @@ useSeoMeta({
           </div>
         </div>
 
-        <div class="table-container">
+        <!-- Desktop: table view -->
+        <div class="table-container desktop-view">
           <table class="data-table">
             <thead>
               <tr>
@@ -167,6 +174,42 @@ useSeoMeta({
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Mobile: card view -->
+        <div class="mobile-view">
+          <div v-for="plan in filteredPlans" :key="plan.id" class="m-card">
+            <div class="m-card-top">
+              <span class="op-tag" :style="{ '--c': operatorColor(plan.operatorSlug) }">{{ plan.operator }}</span>
+              <span class="m-card-price">{{ formatPrice(plan.priceMur) }}</span>
+            </div>
+            <div class="m-card-name">{{ plan.name }}</div>
+            <div class="m-card-grid">
+              <div class="m-card-stat">
+                <span class="m-stat-val">
+                  <template v-if="plan.volumeGb === null"><span class="unlimited">Unlimited</span></template>
+                  <template v-else>{{ formatVolume(plan) }}</template>
+                </span>
+                <span class="m-stat-label">Volume</span>
+              </div>
+              <div class="m-card-stat">
+                <span class="m-stat-val">{{ formatDuration(plan.durationDays) }}</span>
+                <span class="m-stat-label">Duration</span>
+              </div>
+              <div class="m-card-stat">
+                <span class="m-stat-val">{{ formatCostPerGb(plan) }}</span>
+                <span class="m-stat-label">Per GB</span>
+              </div>
+              <div class="m-card-stat">
+                <span class="m-stat-val">
+                  <template v-if="plan.dailyCap"><span class="cap-tag">{{ plan.dailyCap }} GB</span></template>
+                  <template v-else>{{ formatVolumePerDay(plan) }}</template>
+                </span>
+                <span class="m-stat-label">Daily</span>
+              </div>
+            </div>
+            <div v-if="showNotes && plan.notes" class="m-card-notes">{{ plan.notes }}</div>
+          </div>
         </div>
 
         <div v-if="filteredPlans.length === 0" class="empty-state">
@@ -472,6 +515,69 @@ useSeoMeta({
   margin-bottom: 24px;
 }
 
+/* Mobile cards — hidden on desktop */
+.mobile-view { display: none; }
+
+.m-card {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 12px 0;
+}
+
+.m-card:first-child { padding-top: 0; }
+.m-card:last-child { border-bottom: none; }
+
+.m-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.m-card-price {
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.m-card-name {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.m-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 4px;
+}
+
+.m-card-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+.m-stat-val {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1.3;
+}
+
+.m-stat-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.m-card-notes {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 @media (max-width: 1024px) {
   .layout { grid-template-columns: 1fr; gap: 40px; }
   .sidebar-filters { position: static; }
@@ -482,9 +588,66 @@ useSeoMeta({
 }
 
 @media (max-width: 768px) {
-  .page-title { font-size: 36px; }
-  .data-table { font-size: 12px; }
-  .data-table th, .data-table td { padding: 12px 8px; }
-  .price-cell { font-size: 14px; }
+  .content { padding: 24px 16px; }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 16px;
+  }
+
+  .page-title { font-size: 28px; }
+  .page-subtitle { font-size: 14px; }
+
+  .filter-toggle { width: 100%; text-align: center; }
+
+  .sort-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .sort-chips {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sort-chips::-webkit-scrollbar { display: none; }
+
+  .sort-chips button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .table-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* Hide table, show cards */
+  .desktop-view { display: none; }
+  .mobile-view { display: block; }
+
+  .duration-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .duration-list button {
+    border-bottom: none;
+    border-right: 1px solid var(--border-subtle);
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 12px;
+    min-width: 0;
+  }
+
+  .duration-list button:last-child { border-right: none; }
 }
 </style>
