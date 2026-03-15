@@ -38,9 +38,9 @@ const sidebarTitle = computed(() => {
         </NuxtLink>
 
         <nav class="header-nav">
-          <NuxtLink to="/" :class="{ active: route.path === '/' || route.path === '/mauritius-internet-prices/' }">The Report</NuxtLink>
-          <NuxtLink to="/compare" :class="{ active: route.path === '/compare' || route.path === '/mauritius-internet-prices/compare' }">All Plans</NuxtLink>
-          <NuxtLink to="/operators" :class="{ active: route.path === '/operators' || route.path === '/mauritius-internet-prices/operators' }">Operators</NuxtLink>
+          <NuxtLink to="/" :class="{ active: route.path === '/' }">The Report</NuxtLink>
+          <NuxtLink to="/compare" :class="{ active: route.path === '/compare' }">All Plans</NuxtLink>
+          <NuxtLink to="/operators" :class="{ active: route.path === '/operators' }">Operators</NuxtLink>
         </nav>
 
         <div class="header-actions">
