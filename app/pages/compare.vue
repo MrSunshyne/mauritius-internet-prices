@@ -520,7 +520,7 @@ useSeoMeta({
 
 .m-card {
   border-bottom: 1px solid var(--border-subtle);
-  padding: 20px 0;
+  padding: 12px 0;
 }
 
 .m-card:first-child { padding-top: 0; }
@@ -530,49 +530,50 @@ useSeoMeta({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .m-card-price {
   font-weight: 800;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .m-card-name {
   font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 12px;
+  font-size: 14px;
+  margin-bottom: 6px;
 }
 
 .m-card-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 4px;
 }
 
 .m-card-stat {
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  padding: 8px 0;
+  gap: 0;
+  padding: 0;
 }
 
 .m-stat-val {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   font-family: var(--font-mono);
+  line-height: 1.3;
 }
 
 .m-stat-label {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
 }
 
 .m-card-notes {
-  margin-top: 8px;
+  margin-top: 4px;
   font-size: 12px;
   color: var(--text-muted);
 }
