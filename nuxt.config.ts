@@ -23,6 +23,7 @@ export default defineNuxtConfig({
         { name: 'twitter:image', content: 'https://mobile-data.ramgolam.com/og-image.png' },
       ],
       script: [
+        { src: 'https://cloud.umami.is/script.js', defer: true, 'data-website-id': '883dbbfd-089a-4083-86a9-911a349268f0' },
         { src: 'https://gc.zgo.at/count.js', async: true, 'data-goatcounter': 'https://mobile-data-mauritius.goatcounter.com/count' },
       ],
       link: [
