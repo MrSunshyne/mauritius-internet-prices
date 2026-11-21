@@ -86,7 +86,7 @@ const sidebarTitle = computed(() => {
           <p class="footer-subtitle">Independent analysis of Mauritian mobile data markets.</p>
         </div>
         <div class="footer-col legal-col">
-          <p>Verified March 2026. All prices MUR / VAT inclusive.</p>
+          <p>Verified November 2026. All prices MUR / VAT inclusive.</p>
           <div class="author-info">
             Built by <a href="https://github.com/MrSunshyne" target="_blank" rel="noopener noreferrer">Sandeep Ramgolam</a>.
           </div>
