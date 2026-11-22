@@ -1,0 +1,3 @@
+# Browsers re-check the service worker script; never let a cache hide the kill switch.
+/sw.js
+  Cache-Control: no-cache

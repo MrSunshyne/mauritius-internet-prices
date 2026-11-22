@@ -3,6 +3,16 @@ const { operators } = useMobilePlans()
 
 const route = useRoute()
 
+// Every page names mobile-data.ramgolam.com as its canonical URL (query string dropped),
+// so search engines fold the old mauritius-internet-prices.netlify.app URLs into it.
+// GitHub Pages serves each page from a folder, so its URL ends in a slash.
+const canonicalUrl = computed(() => {
+  const path = route.path === '/' ? '/' : `${route.path.replace(/\/$/, '')}/`
+  return new URL(path, 'https://mobile-data.ramgolam.com').href
+})
+useHead({ link: [{ rel: 'canonical', href: canonicalUrl }] })
+useSeoMeta({ ogUrl: canonicalUrl })
+
 const dark = ref(false)
 
 onMounted(() => {

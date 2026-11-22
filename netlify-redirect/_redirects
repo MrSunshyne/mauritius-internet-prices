@@ -1,0 +1,11 @@
+# mauritius-internet-prices.netlify.app was this site's first home. It now only
+# redirects to https://mobile-data.ramgolam.com (GitHub Pages). The Netlify project
+# is not linked to this repo; deploy this folder by hand:
+#   netlify deploy --prod --no-build --dir netlify-redirect --site c90d73ce-5df1-41c9-98d3-3e3e89673e59
+# Files in this folder (sw.js, the Google verification file) are served as they
+# are; every other path 301s to the same path on mobile-data.ramgolam.com, and
+# Netlify passes the query string along. GitHub Pages serves pages with a trailing
+# slash, so the two pages get it here to keep it to one hop.
+/compare    https://mobile-data.ramgolam.com/compare/    301
+/operators  https://mobile-data.ramgolam.com/operators/  301
+/*          https://mobile-data.ramgolam.com/:splat      301
