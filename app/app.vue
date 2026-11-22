@@ -68,7 +68,7 @@ const sidebarTitle = computed(() => {
           <button class="theme-toggle" :title="dark ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleDark">
             <svg v-if="dark" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" />
-              <path d="M8 1v2M8 13v2M1 8h2M13 8h2 suicide-3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
             </svg>
             <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M14 9.2A6.5 6.5 0 0 1 6.8 2 6 6 0 1 0 14 9.2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
